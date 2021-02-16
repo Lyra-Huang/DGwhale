@@ -1,0 +1,156 @@
+---
+title: "whale call data"
+author: "Lyra"
+date: "25/01/2021"
+output: html_document
+---
+
+#load required packages
+```{r,echo=FALSE}
+library(MASS)
+library(tidyverse)
+library(mgcv)
+```
+
+#data import
+```{r,echo=FALSE}
+whale_data_DGN <- 
+  read.csv("/Users/lyra/Desktop/Honours/DG_NewPop/Stats_Code/DGN_nbDGDcalls_day_2002to2014.csv",header=T)
+whale_data_DGS <- 
+  read.csv("/Users/lyra/Desktop/Honours/DG_NewPop/Stats_Code/DGS_nbDGDcalls_day_2002to2018.csv",header=T)
+colnames(whale_data_DGN)[1] <- "year"
+colnames(whale_data_DGS)[1] <- "year"
+
+#make year and month into factors
+whale_data_DGN$year <- as.factor(whale_data_DGN$year)
+whale_data_DGN$month <- as.factor(whale_data_DGN$month)
+whale_data_DGS$year <- as.factor(whale_data_DGS$year)
+whale_data_DGS$month <- as.factor(whale_data_DGS$month)
+
+```
+
+
+#data set merge and manipulation - chl-a + sst
+```{r}
+
+# add det column  (recoding hour =0, det= NA; otherwise 1 or 0 based on detection)
+whale_data_DGN$det<- as.numeric(whale_data_DGN$nb_calls>0)
+whale_data_DGN$det<- ifelse(whale_data_DGN$nb_recording_hrs!=0,whale_data_DGN$det,'n/a') 
+whale_data_DGN$det<-as.numeric(whale_data_DGN$det)
+
+# set a column for date
+whale_data_DGN$date <- as.Date(with(whale_data_DGN, paste(year,julian_day,sep="-")), "%Y-%j")
+
+for (i in 1:length(chl_nw$date)){
+  chl_nw$det[i]<-sum(whale_data_DGN[which(chl_nw$date[i]<=whale_data_DGN$date & whale_data_DGN$date<chl_nw$date[i+1]),6])
+}
+
+for(i in 1:length(chl_nw$date)){
+  chl_nw$prop[i]<-chl_nw$det[i]/as.numeric(chl_nw$date[i+1]- chl_nw$date[i])
+}
+
+chl_nw$proplead<-lead(chl_nw$prop)
+
+nw<-merge(x=chl_nw,y=sst_nw,by.x=c("date"),by.y=c("time"),all.x=TRUE)
+
+```
+time series
+```{r}
+dettimeseries<-ts(whale_data_DGN$nb_calls)
+plot.ts(dettimeseries)
+```
+
+
+Modelling
+```{r}
+# adding weights for binomial model
+w<-rep(NA,length(nw))
+for(i in 1:length(nw$date)) {
+  w[i]<-as.numeric(nw$date[i+1]- nw$date[i])}
+
+# prop ~ chl-a
+glm1<-glm(data=nw,prop~small+sst,family='binomial',weights=w)
+summary(glm1)
+
+# lead(prop) ~ chl-a
+glm2<-glm(data=nw,proplead~small+sst,family='binomial',weights=w)
+summary(glm2)
+
+full.model <- glm(data=nw,proplead~large+small+sst,family='binomial',weights=w)
+
+step.model <- stepAIC(full.model, direction = "both",trace = FALSE)
+summary(step.model)
+```
+
+
+se
+```{r}
+# add det column  (recoding hour =0, det= NA; otherwise 1 or 0 based on detection)
+whale_data_DGS$det<- as.numeric(whale_data_DGS$nb_calls>0)
+whale_data_DGS$det<- ifelse(whale_data_DGS$nb_recording_hrs!=0,whale_data_DGS$det,'n/a') 
+whale_data_DGS$det<-as.numeric(whale_data_DGS$det)
+
+# set a column for date
+whale_data_DGS$date <- as.Date(with(whale_data_DGS, paste(year,julian_day,sep="-")), "%Y-%j")
+
+
+```
+
+
+#adding det + sst
+```{r}
+#adding det column into summary dataset
+for (i in 1:length(chl_se$date)){
+  chl_se$det[i]<-sum(whale_data_DGS[which(chl_se$date[i]<=whale_data_DGS$date & whale_data_DGS$date<chl_se$date[i+1]),6])
+}
+
+#prop and proplead
+for(i in 1:length(chl_se$date)){
+  chl_se$prop[i]<-chl_se$det[i]/as.numeric(chl_se$date[i+1]- chl_se$date[i])
+}
+
+chl_se$proplead<-lead(chl_se$prop)
+
+se<-merge(x=chl_se,y=sst_se,by.x=c("date"),by.y=c("time"),all.x=TRUE)
+
+```
+
+```{r}
+# adding weights for binomial model
+for(i in 1:length(se$date)) {
+  w[i]<-as.numeric(se$date[i+1]- se$date[i])}
+
+# prop ~ chl-a
+glm1<-glm(data=se,prop~large+small+sst,family='binomial',weights=w)
+summary(glm1)
+
+# lead(prop) ~ chl-a
+glm2<-glm(data=se,proplead~large+small+sst,family='binomial',weights=w)
+summary(glm2)
+
+#prop best model
+full.model <- glm(data=se,prop~large+small+sst,family='binomial',weights=w)
+
+step.model <- stepAIC(full.model, direction = "both",trace = FALSE)
+summary(step.model)
+
+#lead(prop) best model
+full.model <- glm(data=se,proplead~large+small+sst,family='binomial',weights=w)
+
+step.model <- stepAIC(full.model, direction = "both",trace = FALSE)
+summary(step.model)
+```
+
+analysis of sst
+
+```{r}
+sst_NW<-merge(sst_nw,whale_data_DGN,by.x=c("time"),by.y=c("date"))
+glm1<-glm(data=sst_NW,nb_calls~sst)
+summary(glm1)
+glm2<-glm(data=sst_NW,det~sst)
+summary(glm2)
+
+```
+
+
+

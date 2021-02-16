@@ -1,0 +1,71 @@
+---
+title: "hour call detection"
+author: "Lyra"
+date: "14/02/2021"
+output: html_document
+---
+
+```{r}
+library(R.matlab)
+library(dplyr)
+#library(plyr)
+```
+
+#data import
+```{r,echo=FALSE}
+whale_data_DGN <- 
+  read.csv("/Users/lyra/Desktop/Honours/DG_NewPop/Stats_Code/DGN_nbDGDcalls_day_2002to2014.csv",header=T)
+whale_data_DGS <- 
+  read.csv("/Users/lyra/Desktop/Honours/DG_NewPop/Stats_Code/DGS_nbDGDcalls_day_2002to2018.csv",header=T)
+colnames(whale_data_DGN)[1] <- "year"
+colnames(whale_data_DGS)[1] <- "year"
+
+#make year and month into factors
+whale_data_DGN$year <- as.factor(whale_data_DGN$year)
+whale_data_DGN$month <- as.factor(whale_data_DGN$month)
+whale_data_DGS$year <- as.factor(whale_data_DGS$year)
+whale_data_DGS$month <- as.factor(whale_data_DGS$month)
+```
+
+#readfile
+```{r}
+#set
+var<-2018
+rawdata<-readMat('detections_H08S1_DiegoGarciaS_2018.mat')
+```
+
+```{r}
+# extract the hour with detections
+rawdata<-as.data.frame(rawdata$detections)
+time<-as.POSIXct((rawdata$V5- 719529)*86400, origin = "1970-01-01", tz = "UTC")
+hour<-as.numeric(substr(time, 12, 13))
+julian_day<-rawdata$V2
+data<-cbind(julian_day,hour)
+data<-as.data.frame(data)
+
+#extract the hours that there are calls
+data <- data %>%
+    group_by(julian_day,hour) %>%
+    summarise()
+
+data<- data %>%
+  group_by(julian_day) %>%
+  summarise(count=n())
+
+DGS_2018<-merge(x=whale_data_DGS[which(whale_data_DGS$year==var),],y=data,by="julian_day",all.x=TRUE)
+
+```
+
+```{r}
+
+whale_data_sw<-rbind(DGS_2002,DGS_2003,DGS_2004,DGS_2005,DGS_2006,DGS_2007,DGS_2008,DGS_2009,DGS_2010,DGS_2011,DGS_2012,DGS_2013,DGS_2014,DGS_2015,DGS_2016,DGS_2017,DGS_2018)
+whale_data_sw$count[is.na(whale_data_sw$count)]<-0
+write.csv(whale_data_sw,'whale_data_sw.csv')
+
+```
+
+
+```{r}
+yearly_rec_hrs<-whale_data_sw %>% group_by(year ) %>% summarise(n=sum(nb_recording_hrs))
+```
+

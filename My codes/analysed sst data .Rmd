@@ -1,0 +1,244 @@
+---
+title: "sst data"
+author: "Lyra"
+date: "21/02/2021"
+output: html_document
+---
+
+
+analysed sst _ northwest
+```{r}
+data = nc_open("nw_sst_02.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_nw_1<-data.frame(time,sst)
+
+data = nc_open("nw_sst_05.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_nw_2<-data.frame(time,sst)
+
+data = nc_open("nw_sst_07.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_nw_3<-data.frame(time,sst)
+
+data = nc_open("nw_sst_09.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_nw_4<-data.frame(time,sst)
+
+data = nc_open("nw_sst_11.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_nw_5<-data.frame(time,sst)
+
+data = nc_open("nw_sst_13.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_nw_6<-data.frame(time,sst)
+
+
+sst_nw<-rbind(sst_nw_1,sst_nw_2,sst_nw_3,sst_nw_4,sst_nw_5,sst_nw_6)
+remove(sst_nw_1,sst_nw_2,sst_nw_3,sst_nw_4,sst_nw_5,sst_nw_6)
+
+```
+
+anlaysed sst_ southeast
+
+```{r}
+data = nc_open("se_sst_02.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_1<-data.frame(time,sst)
+
+data = nc_open("se_sst_03.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_2<-data.frame(time,sst)
+
+data = nc_open("se_sst_04.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_3<-data.frame(time,sst)
+
+data = nc_open("se_sst_05.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_4<-data.frame(time,sst)
+
+data = nc_open("se_sst_06.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_5<-data.frame(time,sst)
+
+data = nc_open("se_sst_07.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_6<-data.frame(time,sst)
+
+data = nc_open("se_sst_08.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_7<-data.frame(time,sst)
+
+data = nc_open("se_sst_09.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_8<-data.frame(time,sst)
+
+data = nc_open("se_sst_10.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_9<-data.frame(time,sst)
+
+
+data = nc_open("se_sst_11.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_10<-data.frame(time,sst)
+
+
+data = nc_open("se_sst_12.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_11<-data.frame(time,sst)
+
+
+data = nc_open("se_sst_13.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_12<-data.frame(time,sst)
+
+data = nc_open("se_sst_14.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_13<-data.frame(time,sst)
+
+data = nc_open("se_sst_15.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_14<-data.frame(time,sst)
+
+data = nc_open("se_sst_16.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_15<-data.frame(time,sst)
+
+data = nc_open("se_sst_17.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_16<-data.frame(time,sst)
+
+data = nc_open("se_sst_18.nc")
+sst <- ncvar_get(data,"analysed_sst") 
+time <- ncvar_get(data,"time") 
+nc_close(data)
+time <- as.Date(as.POSIXct(time,origin="1970-01-01T00:00:00Z")) 
+sst <-apply(sst, c(3), mean,na.rm=TRUE)
+sst_se_17<-data.frame(time,sst)
+
+
+sst_se<-rbind(sst_se_1,sst_se_2,sst_se_3,sst_se_4,sst_se_5,sst_se_6,sst_se_7,sst_se_8,sst_se_9,sst_se_10,sst_se_11,sst_se_12,sst_se_13,sst_se_14,sst_se_15,sst_se_16,sst_se_17)
+remove(sst_se_1,sst_se_2,sst_se_3,sst_se_4,sst_se_5,sst_se_6,sst_se_7,sst_se_8,sst_se_9,sst_se_10,sst_se_11,sst_se_12,sst_se_13,sst_se_14,sst_se_15,sst_se_16,sst_se_17)
+
+sst_nw$year<-as.numeric(substr(sst_nw$time, 1, 4))
+sst_nw$month<-as.numeric(substr(sst_nw$time, 6, 7))
+
+sst_se$year<-as.numeric(substr(sst_se$time, 1, 4))
+sst_se$month<-as.numeric(substr(sst_se$time, 6, 7))
+```
+
+
+summary
+```{r}
+
+sum_sst_nw<-sst_nw %>% group_by(year) %>% summarise(tibble(min = min(sst),max = max(sst), mean = mean(sst)))
+sum_sst_se<-sst_se %>% group_by(year) %>% summarise(tibble(min = min(sst),max = max(sst), mean = mean(sst)))
+
+```
+
+binomial model daily
+```{r}
+whale_data_nw$per<-whale_data_nw$count/whale_data_nw$nb_recording_hrs
+whale_data_nw$per[which(whale_data_nw$per>1)]
+whale_data_nw$sst<-sst_nw$sst
+glm1<-glm(data=whale_data_nw,per~sst,family='binomial')
+summary(glm1)
+
+
+whale_data_se$per<-whale_data_se$count/whale_data_se$nb_recording_hrs
+whale_data_se$per[which(whale_data_se$per>1)]<-1
+whale_data_se$sst<-sst_se$sst
+glm2<-glm(data=whale_data_se,per~sst,family='binomial')
+summary(glm2)
+```
+
+
+

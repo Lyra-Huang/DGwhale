@@ -1,0 +1,129 @@
+---
+title: "8-day trend"
+author: "Lyra"
+date: "22/02/2021"
+output: html_document
+---
+
+```{r,echo=FALSE}
+library(MASS)
+library(tidyverse)
+library(mgcv)
+```
+
+```{r}
+nw<-chl_nw
+colnames(nw)<-c("date","chl_large","chl_small")
+whale_data_nw<-whale_data_nw[,-c(1,2,3,4,5,8)]
+nw$year<-whale_data_nw$year
+nw$month<-whale_data_nw$month
+
+whale_data_nw$count[whale_data_nw$count>whale_data_nw$nb_recording_hrs]<-whale_data_nw$nb_recording_hrs[whale_data_nw$count>whale_data_nw$nb_recording_hrs]
+```
+
+```{r}
+for (i in 1:length(nw$date)){
+  nw$record_total_hrs[i]<-sum(whale_data_nw[which(nw$date[i]<=whale_data_nw$date & whale_data_nw$date<nw$date[i+1]),1])
+}
+
+for (i in 1:length(nw$date)){
+  nw$presence_total_hrs[i]<-sum(whale_data_nw[which(nw$date[i]<=whale_data_nw$date & whale_data_nw$date<nw$date[i+1]),2])
+}
+
+for (i in 1:length(nw$date)){
+  nw$mean_sst[i]<-mean(whale_data_nw[which(nw$date[i]<=whale_data_nw$date & whale_data_nw$date<nw$date[i+1]),3])
+}
+
+nw$whale_presence<-nw$presence_total_hrs/nw$record_total_hrs
+#get rid of data with less than 100 recording hours
+nw$whale_presence[nw$record_total_hrs<100]<-NaN
+
+nw$month<-as.numeric(substr(nw$date, 6, 7))
+nw$year<-as.numeric(substr(nw$date, 1, 4))
+```
+
+
+model
+```{r}
+w<-rep(NA,length(nw))
+for(i in 1:length(nw$date)) {
+  w[i]<-as.numeric((nw$date[i+1]- nw$date[i]))*24}
+
+nw$presence_lead<-lead(nw$whale_presence)
+```
+
+```{r}
+glm <- glm(data=nw,whale_presence~chl_large+chl_small+mean_sst,family='binomial',weights = nw$record_total_hrs)
+summary(glm)
+
+glm <- glm(data=nw,whale_presence~chl_large,family='binomial',weights = nw$record_total_hrs)
+summary(glm)
+
+glm <- glm(data=nw,whale_presence~chl_small,family='binomial',weights = nw$record_total_hrs)
+summary(glm)
+
+glm <- glm(data=nw,whale_presence~mean_sst,family='binomial',weights = nw$record_total_hrs)
+summary(glm)
+
+#full.model <- glm(data=nw,whale_presence~chl_large+chl_small+mean_sst,family='binomial',weights=nw$record_total_hrs)
+#step.model <- stepAIC(full.model, direction = "both",trace = FALSE)
+#summary(step.model)
+```
+
+```{r}
+se<-chl_se
+colnames(se)<-c("date","chl_large","chl_small")
+
+whale_data_se$count[whale_data_se$count>whale_data_se$nb_recording_hrs]<-whale_data_se$nb_recording_hrs[whale_data_se$count>whale_data_se$nb_recording_hrs]
+```
+
+
+```{r}
+for (i in 1:length(se$date)){
+  se$record_total_hrs[i]<-sum(whale_data_se[which(se$date[i]<=whale_data_se$date & whale_data_se$date<se$date[i+1]),5])
+}
+
+for (i in 1:length(se$date)){
+  se$presence_total_hrs[i]<-sum(whale_data_se[which(se$date[i]<=whale_data_se$date & whale_data_se$date<se$date[i+1]),6])
+}
+
+for (i in 1:length(se$date)){
+  se$mean_sst[i]<-mean(whale_data_se[which(se$date[i]<=whale_data_se$date & whale_data_se$date<nw$date[i+1]),8])
+}
+
+se$whale_presence<-se$presence_total_hrs/se$record_total_hrs
+#get rid of data with less than 100 recording hours
+se$whale_presence[se$record_total_hrs<100]<-NaN
+
+se$presence_lead<-lead(se$whale_presence)
+
+se$month<-as.numeric(substr(se$date, 6, 7))
+se$year<-as.numeric(substr(se$date, 1, 4))
+
+```
+
+
+```{r}
+glm <- glm(data=se,whale_presence~chl_large+chl_small+mean_sst,family='binomial',weights = se$record_total_hrs)
+summary(glm)
+
+glm <- glm(data=se,whale_presence~chl_large,family='binomial',weights = se$record_total_hrs)
+summary(glm)
+
+glm <- glm(data=se,whale_presence~chl_small,family='binomial',weights = se$record_total_hrs)
+summary(glm)
+
+glm <- glm(data=se,whale_presence~mean_sst,family='binomial',weights = se$record_total_hrs)
+summary(glm)
+```
+
+
+stat model by year
+```{r}
+nw_year<-subset(nw,year==2002)
+glm <- glm(data=nw_year,whale_presence~chl_small,family='binomial',weights =se_year$record_total_hrs)
+summary(glm)
+
+```
+
+

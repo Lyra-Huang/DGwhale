@@ -1,0 +1,27 @@
+---
+title: "whale data figure"
+output: html_notebook
+---
+
+
+```{r}
+whale_data_se$whale_presence=whale_data_se$count/whale_data_se$nb_recording_hrs
+ggplot(data=whale_data_se, aes(x= sst,whale_presence)) +
+   geom_point(aes(colour = as.character(month))) #+
+   # geom_smooth(method=lm , color="red", se=FALSE)
+```
+
+
+
+```{r}
+a$month <- as.character(a$month)
+ggplot(a, aes(x=sst, y=nb_calls)) +
+  geom_point(aes(colour= month)) +
+  theme_classic()
+
+ggplot(whale_data_nw, aes(x=sst, y=nb_calls)) +
+  geom_point(aes(colour=as.character(month))) +
+  theme_classic()
+```
+
+

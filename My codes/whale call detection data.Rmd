@@ -68,11 +68,11 @@ w<-rep(NA,length(nw))
 for(i in 1:length(nw$date)) {
   w[i]<-as.numeric(nw$date[i+1]- nw$date[i])}
 
-# prop ~ chl-a
+# prop ~ 
 glm1<-glm(data=nw,prop~small+sst,family='binomial',weights=w)
 summary(glm1)
 
-# lead(prop) ~ chl-a
+# lead(prop) ~ 
 glm2<-glm(data=nw,proplead~small+sst,family='binomial',weights=w)
 summary(glm2)
 
@@ -151,6 +151,5 @@ glm2<-glm(data=sst_NW,det~sst)
 summary(glm2)
 
 ```
-
 
 

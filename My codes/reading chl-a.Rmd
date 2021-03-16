@@ -450,7 +450,7 @@ remove(sst_se_1,sst_se_2,sst_se_3,sst_se_4,sst_se_5,sst_se_6,sst_se_7,sst_se_8,s
 ```
 
 
-summary
+summary - chl
 ```{r}
 chl_nw$year<-as.numeric(substr(chl_nw$date, 1, 4))
 chl_nw$month<-as.numeric(substr(chl_nw$date, 6, 7))
@@ -480,6 +480,32 @@ mean_chl_se_small_summer<-chl_se_summer %>% group_by(year) %>% summarise(mean=me
 mean_chl_se_large_summer<-chl_se_summer %>% group_by(year) %>% summarise(mean=mean(large,na.rm=TRUE))
 
 ```
+
+summary - sst
+
+```{r}
+mean_sst_nw<-sst_nw %>% group_by(year) %>% summarise(mean=mean(sst,na.rm=TRUE))
+mean_sst_se<-sst_se %>% group_by(year) %>% summarise(mean=mean(sst,na.rm=TRUE))
+
+
+
+sst_nw_winter<-subset(sst_nw,month>5 & month<12)
+mean_sst_nw_winter<-sst_nw_winter %>% group_by(year) %>% summarise(mean=mean(sst,na.rm=TRUE))
+
+sst_se_winter<-subset(sst_se,month>5 & month<12)
+mean_sst_se_winter<-sst_se_winter %>% group_by(year) %>% summarise(mean=mean(sst,na.rm=TRUE))
+
+
+sst_nw_summer<-subset(sst_nw,month< 6| month==12)
+mean_sst_nw_summer<-sst_nw_summer %>% group_by(year) %>% summarise(mean=mean(sst,na.rm=TRUE))
+
+
+sst_se_summer<-subset(sst_se,month< 6| month==12)
+mean_sst_se_summer<-sst_se_summer %>% group_by(year) %>% summarise(mean=mean(sst,na.rm=TRUE))
+
+```
+
+
 
 
 boxplot for chl-a nw &se small,large allyear
@@ -511,9 +537,5 @@ mean_chl<-rbind(mean_chl_nw,mean_chl_se)
 
 ```
 
-```{r}
-ggplot(mean_chl, aes(x=time, y=mean, fill=location)) + 
-  geom_boxplot()+
-  labs(title="Food availability by locations",y="chlorophyll-a concentration(mg/m^3)")
-```
+
 

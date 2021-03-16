@@ -53,16 +53,14 @@ nw$presence_lead<-lead(nw$whale_presence)
 ```
 
 ```{r}
-glm <- glm(data=nw,whale_presence~chl_large+chl_small+mean_sst,family='binomial',weights = nw$record_total_hrs)
+
+glm <- glmer(data=nw,whale_presence~chl_large+(1|year),family='binomial',weights = nw$record_total_hrs)
 summary(glm)
 
-glm <- glm(data=nw,whale_presence~chl_large,family='binomial',weights = nw$record_total_hrs)
+glm <- glmer(data=nw,whale_presence~chl_small+(1|year),family='binomial',weights = nw$record_total_hrs)
 summary(glm)
 
-glm <- glm(data=nw,whale_presence~chl_small,family='binomial',weights = nw$record_total_hrs)
-summary(glm)
-
-glm <- glm(data=nw,whale_presence~mean_sst,family='binomial',weights = nw$record_total_hrs)
+glm <- glmer(data=nw,whale_presence~mean_sst+(1|year),family='binomial',weights = nw$record_total_hrs)
 summary(glm)
 
 #full.model <- glm(data=nw,whale_presence~chl_large+chl_small+mean_sst,family='binomial',weights=nw$record_total_hrs)
@@ -104,26 +102,34 @@ se$year<-as.numeric(substr(se$date, 1, 4))
 
 
 ```{r}
-glm <- glm(data=se,whale_presence~chl_large+chl_small+mean_sst,family='binomial',weights = se$record_total_hrs)
+glm<-glmer(data=se,whale_presence~chl_large+(1|year),family='binomial',weights = se$record_total_hrs)
 summary(glm)
 
-glm <- glm(data=se,whale_presence~chl_large,family='binomial',weights = se$record_total_hrs)
+glm <- glmer(data=se,whale_presence~chl_small+(1|year),family='binomial',weights = se$record_total_hrs)
 summary(glm)
 
-glm <- glm(data=se,whale_presence~chl_small,family='binomial',weights = se$record_total_hrs)
-summary(glm)
-
-glm <- glm(data=se,whale_presence~mean_sst,family='binomial',weights = se$record_total_hrs)
+glm <- glmer(data=se,whale_presence~mean_sst+(1|year),family='binomial',weights = se$record_total_hrs)
 summary(glm)
 ```
 
 
 stat model by year
 ```{r}
-nw_year<-subset(nw,year==2002)
-glm <- glm(data=nw_year,whale_presence~chl_small,family='binomial',weights =se_year$record_total_hrs)
+se_year<-subset(se,year==2018)
+glm <- glm(data=se_year,whale_presence~mean_sst,family='binomial',weights =se_year$record_total_hrs)
 summary(glm)
 
+```
+
+
+```{r}
+nw$day_group<-rep(1:46)
+nw_day_group<-
+  nw %>% group_by(day_group) %>% summarise(across(c("whale_presence","mean_sst","chl_large","chl_small"),mean,na.rm=TRUE))
+
+se$day_group<-rep(1:46)
+se_day_group<-
+  se %>% group_by(day_group) %>% summarise(across(c("whale_presence","mean_sst","chl_large","chl_small"),mean,na.rm=TRUE))
 ```
 
 

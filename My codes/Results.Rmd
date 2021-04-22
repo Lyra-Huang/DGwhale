@@ -1,0 +1,34 @@
+---
+title: "Results"
+author: "Lyra"
+date: "07/04/2021"
+output: html_document
+---
+
+```{r}
+setwd("~/Documents/GitHub/DGwhale/My data/data summary")
+nw<-read.csv("nw_complete.csv")[,-1]
+se<-read.csv("se_complete.csv")[,-1]
+nw_sst
+
+```
+
+this is to calculate efficient periods
+```{r}
+sum(nw$record_total_hrs)
+sum(se$record_total_hrs)
+
+598-sum(nw$record_total_hrs<192*0.7)
+783-sum(se$record_total_hrs<192*0.7)
+
+(598-sum(nw$record_total_hrs<192*0.7))/598
+(783-sum(se$record_total_hrs<192*0.7))/783
+
+```
+
+checking if number of calls is significantly different on the se and nw
+```{r}
+x=nw$whale_presence
+y=se$whale_presence[1:598]
+wilcox.test(x,y,period=TRUE)
+```

@@ -121,6 +121,15 @@ summary(glm)
 
 ```
 
+```{r}
+glm<-glmer(data=se,whale_presence~chl_large+mean_sst+(1|year),family='binomial',weights = se$record_total_hrs)
+summary(glm)
+
+glm<-glmer(data=nw,whale_presence~chl_large+mean_sst+(1|year),family='binomial',weights = nw$record_total_hrs)
+summary(glm)
+```
+
+
 
 ```{r}
 nw$day_group<-rep(1:46)
